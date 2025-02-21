@@ -1,7 +1,9 @@
 import React from "react";
 import CompNavBar from "../component/CompNavBar";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
+  const navigate = useNavigate();
   return (
     <>
       <CompNavBar />
@@ -12,6 +14,13 @@ const HomePage = () => {
         <span>성격 유형 이해</span>
         <span>팀 평가</span>
       </div>
+      <button
+        onClick={() => {
+          navigate("/login");
+        }}
+      >
+        내 성격 알아보기
+      </button>
     </>
   );
 };
