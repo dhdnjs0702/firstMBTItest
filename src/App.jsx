@@ -12,8 +12,9 @@ import ProfilePage from "./pages/ProfilePage";
 import TestPage from "./pages/TestPage";
 import TestResultsPage from "./pages/TestResultsPage";
 import { useLoginStatus } from "./zustand/mbtiStore";
+
 const App = () => {
-  const { isLogin, setIsLogin } = useLoginStatus((state) => state);
+  const { isLogin, setIsLogin } = useLoginStatus();
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -21,11 +22,11 @@ const App = () => {
   }, [setIsLogin]);
 
   const PublicRoute = () => {
-    return <>{!isLogin ? <Outlet /> : <Navigate to="/test" replace />}</>;
+    return !isLogin ? <Outlet /> : <Navigate to="/test" replace />;
   };
 
   const PrivateRoute = () => {
-    return <>{isLogin ? <Outlet /> : <Navigate to="/signup" replace />}</>;
+    return isLogin ? <Outlet /> : <Navigate to="/signup" replace />;
   };
 
   return (
