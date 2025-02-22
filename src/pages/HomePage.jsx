@@ -1,28 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import CompNavBar from "../component/CompNavBar";
 import { useNavigate } from "react-router-dom";
+import { useLoginStatus } from "../zustand/mbtiStore";
 
 const HomePage = () => {
   const navigate = useNavigate();
 
-  const [isLogin, setIsLogin] = useState(false);
+  const { isLogin, setIsLogin } = useLoginStatus((state) => state);
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-    setIsLogin(!!token); 
-    console.log("Token in useEffect:", token);
-  }, []); 
+    setIsLogin(!!token);
+  }, []);
 
   useEffect(() => {
     if (isLogin) {
-      console.log("User is logged in, navigating to /test");
-      navigate("/test"); 
+      navigate("/test");
     }
-  }, [isLogin, navigate]); 
+  }, [isLogin, navigate]);
 
   const jumpToPage = () => {
     const token = localStorage.getItem("accessToken");
-    console.log("Token in jumpToPage:", token);
+
     if (token) {
       navigate("/test");
     } else {
