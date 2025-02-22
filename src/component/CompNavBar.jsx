@@ -17,4 +17,4 @@ const CompNavBar = () => {
   );
 };
 
-export default CompNavBar;
+export default React.memo(CompNavBar);
