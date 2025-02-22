@@ -2,6 +2,7 @@ import AuthForm from "../component/AuthForm";
 import { useNavigate } from "react-router-dom";
 import Api from "../api/auth";
 import { useUserStore } from "../zustand/mbtiStore";
+import CompNavBar from "../component/CompNavBar";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -27,7 +28,6 @@ const SignUpPage = () => {
         alert("로그인이 완료되었습니다.");
 
         localStorage.setItem("accessToken", data.accessToken);
-        localStorage.setItem("user", JSON.stringify(data));
 
         navigate("/");
       } else {
@@ -39,7 +39,6 @@ const SignUpPage = () => {
 
         alert("회원가입이 완료되었습니다.");
 
-        // 로그인 모드로 전환
         setIsLoginMode(true);
 
         resetForm();
@@ -52,6 +51,7 @@ const SignUpPage = () => {
 
   return (
     <>
+      <CompNavBar />
       <div>
         <h1>{isLoginMode ? "로그인" : "회원가입"}</h1>
         <form onSubmit={onSubmitHandler}>
