@@ -1,7 +1,14 @@
-import React from "react";
+import CompNavBar from "../component/CompNavBar";
 
 const TestPage = () => {
-  return <div>TestPage</div>;
+  return (
+    <>
+      <CompNavBar />
+      <div>
+        <h1>TestPage</h1>
+      </div>
+    </>
+  );
 };
 
 export default TestPage;
