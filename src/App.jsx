@@ -1,21 +1,46 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import {
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+} from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
-import ProfilePge from "./pages/ProfilePge";
+import ProfilePage from "./pages/ProfilePage";
 import TestPage from "./pages/TestPage";
 import TestResultsPage from "./pages/TestResultsPage";
-
+import { useLoginStatus } from "./zustand/mbtiStore";
 const App = () => {
+  const { isLogin, setIsLogin } = useLoginStatus((state) => state);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    setIsLogin(!!token);
+  }, [setIsLogin]);
+
+  const PublicRoute = () => {
+    return <>{!isLogin ? <Outlet /> : <Navigate to="/test" replace />}</>;
+  };
+
+  const PrivateRoute = () => {
+    return <>{isLogin ? <Outlet /> : <Navigate to="/signup" replace />}</>;
+  };
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/profile" element={<ProfilePge />} />
-        <Route path="/test" element={<TestPage />} />
-        <Route path="/testresults" element={<TestResultsPage />} />
+        <Route element={<PublicRoute />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+        </Route>
+
+        <Route element={<PrivateRoute />}>
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/test" element={<TestPage />} />
+          <Route path="/testresults" element={<TestResultsPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
