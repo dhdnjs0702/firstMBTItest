@@ -8,11 +8,6 @@ const jsonApi = axios.create({
   baseURL: "https://scrawny-beaded-bookcase.glitch.me",
 });
 
-export const updateTestResultVisibility = async (userId, visibility) => {
-  const response = await jsonApi.patch(`testResults/${userId}`, { visibility });
-  return response.data;
-};
-
 export const saveResult = async (mbtiResult) => {
   try {
     const response = await jsonApi.post("/testResults", {
@@ -20,6 +15,7 @@ export const saveResult = async (mbtiResult) => {
       timestamp: new Date().toISOString(),
       userId: localStorage.getItem("userInfo"),
       visibility: true,
+      nickname: localStorage.getItem("userNick"),
     });
     console.log("결과가 저장되었습니다:", response.data);
   } catch (error) {
@@ -34,6 +30,19 @@ export const getTestResults = async () => {
     return response.data;
   } catch (error) {
     console.log("테스트 결과 가져오기 실패", error);
+  }
+};
+
+export const changeVisibility = async (userInfo) => {
+  try {
+    const { id, visibility } = userInfo;
+    const response = await jsonApi.patch(`/testResults/${id}`, {
+      visibility: !visibility,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
   }
 };
 
