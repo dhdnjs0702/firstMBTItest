@@ -10,8 +10,9 @@ const useUserStore = create((set) => {
 });
 
 const useLoginStatus = create((set) => {
+  const token = localStorage.getItem("accessToken");
   return {
-    isLogin: false,
+    isLogin: !!token,
     setIsLogin: (status) => {
       return set({ isLogin: status });
     },
