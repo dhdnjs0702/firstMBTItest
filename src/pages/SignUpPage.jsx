@@ -1,11 +1,12 @@
 import AuthForm from "../component/AuthForm";
 import { useNavigate } from "react-router-dom";
 import Api from "../api/auth";
-import { useUserStore } from "../zustand/mbtiStore";
+import { useUserStore, useLoginStatus } from "../zustand/mbtiStore";
 import CompNavBar from "../component/CompNavBar";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
+  const { setIsLogin } = useLoginStatus();
   const { isLoginMode, setIsLoginMode } = useUserStore((state) => state);
   const { formState, onChangeHandler, resetForm } = AuthForm({
     id: "",
@@ -13,7 +14,6 @@ const SignUpPage = () => {
     nickname: "",
   });
   const { id, password, nickname } = formState;
-
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -28,6 +28,14 @@ const SignUpPage = () => {
         alert("로그인이 완료되었습니다.");
 
         localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("userNick", data.nickname);
+        localStorage.setItem("userInfo", data.userId);
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+          setIsLogin(true);
+        } else {
+          setIsLogin(false);
+        }
 
         navigate("/");
       } else {
