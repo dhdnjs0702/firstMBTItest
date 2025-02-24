@@ -18,4 +18,22 @@ const useLoginStatus = create((set) => {
   };
 });
 
-export { useUserStore, useLoginStatus };
+const useNickName = create((set) => {
+  return {
+    nickName: "",
+    setNickName: (newNick) => {
+      return set({ nickName: newNick });
+    },
+  };
+});
+
+const useResults = create((set) => {
+  return {
+    results: [],
+    setResults: (data) => {
+      return set({ results: [...data] });
+    },
+  };
+});
+
+export { useUserStore, useLoginStatus, useNickName, useResults };
