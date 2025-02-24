@@ -1,5 +1,9 @@
 import { useEffect } from "react";
-import { deleteTestResult, getTestResults } from "../api/auth";
+import {
+  changeVisibility,
+  deleteTestResult,
+  getTestResults,
+} from "../api/auth";
 import CompNavBar from "../component/CompNavBar";
 import { useResults } from "../zustand/mbtiStore";
 import { mbtiDescriptions } from "../utils/mbtiCalculator";
@@ -40,31 +44,60 @@ const TestResultsPage = () => {
     }
   };
 
+  //주석 바로 밑 부분을 참조하시면 됩니다.
+  const visibilityMutation = useMutation({
+    mutationFn: changeVisibility,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["testResults"] });
+    },
+  });
+  const handleVisibility = (selectedInfo) => {
+    visibilityMutation.mutate(selectedInfo);
+  };
   return (
     <div>
       <CompNavBar />
       <h1>테스트 결과</h1>
       <div>
-        {results.map((result) => (
-          <div key={result.id}>
-            <div>
-              <h3>MBTI 결과: {result.mbti}</h3>
-              <p>{mbtiDescriptions[result.mbti]}</p>
-              <p>
-                테스트 날짜: {new Date(result.timestamp).toLocaleDateString()}
-              </p>
-              {currentUserId === result.userId && (
-                <button
-                  onClick={() => handleDelete(result.id)}
-                  disabled={deleteMutation.isPending}
-                >
-                  {deleteMutation.isPending ? "삭제 중..." : "삭제"}
-                </button>
-              )}
+        {results
+          .filter((e) => {
+            return (
+              e.visibility === false ||
+              e.userId === localStorage.getItem("userInfo")
+            );
+          })
+          .map((result) => (
+            <div key={result.id}>
+              <div>
+                <h3>
+                  {result.nickname}님의MBTI 결과: {result.mbti}
+                </h3>
+                <p>{mbtiDescriptions[result.mbti]}</p>
+                <p>
+                  테스트 날짜: {new Date(result.timestamp).toLocaleDateString()}
+                </p>
+                {currentUserId === result.userId && (
+                  <>
+                    <button
+                      onClick={() => handleDelete(result.id)}
+                      disabled={deleteMutation.isPending}
+                    >
+                      {deleteMutation.isPending ? "삭제 중..." : "삭제"}
+                    </button>{" "}
+                    <span></span>
+                    <button
+                      onClick={() => {
+                        handleVisibility(result);
+                      }}
+                    >
+                      {result.visibility ? "공개" : "비공개"}
+                    </button>
+                  </>
+                )}
+              </div>
+              <hr />
             </div>
-            <hr />
-          </div>
-        ))}
+          ))}
 
         {results.length === 0 && <p>저장된 테스트 결과가 없습니다.</p>}
       </div>
