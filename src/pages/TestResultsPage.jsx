@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import {
   changeVisibility,
   deleteTestResult,
@@ -7,25 +6,23 @@ import {
 import CompNavBar from "../component/CompNavBar";
 import { useResults } from "../zustand/mbtiStore";
 import { mbtiDescriptions } from "../utils/mbtiCalculator";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const TestResultsPage = () => {
   const queryClient = useQueryClient();
   const { results, setResults } = useResults((state) => state);
   const currentUserId = localStorage.getItem("userInfo");
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const data = await getTestResults();
-        setResults(data);
-      } catch (error) {
-        console.error("결과 정보 가져오기 실패", error);
-      }
-    };
+  const {
+    data: testResults,
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ["testResults"],
+    queryFn: getTestResults,
+  });
 
-    getData();
-  }, [setResults]);
+  console.log(testResults);
 
   const deleteMutation = useMutation({
     mutationFn: deleteTestResult,
@@ -47,6 +44,20 @@ const TestResultsPage = () => {
   //주석 바로 밑 부분을 참조하시면 됩니다.
   const visibilityMutation = useMutation({
     mutationFn: changeVisibility,
+    onMutate: async (selectedInfo) => {
+      const previousTestResults = queryClient.getQueryData(["testResults"]);
+
+      queryClient.setQueryData(["testResults"], (prev) =>
+        prev.map((result) =>
+          result.id === selectedInfo.id
+            ? { ...result, visibility: !result.visibility }
+            : result
+        )
+      );
+
+      // 롤백을 위해 이전 데이터 반환
+      return { previousTestResults };
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["testResults"] });
     },
@@ -54,12 +65,20 @@ const TestResultsPage = () => {
   const handleVisibility = (selectedInfo) => {
     visibilityMutation.mutate(selectedInfo);
   };
+
+  if (isPending) {
+    return <div>로딩중,,,</div>;
+  }
+
+  if (isError) {
+    return <div>오류가 발생했습니다. 관리자에게 문의 해주세요</div>;
+  }
   return (
     <div>
       <CompNavBar />
       <h1>테스트 결과</h1>
       <div>
-        {results
+        {testResults
           .filter((e) => {
             return (
               e.visibility === false ||
@@ -99,7 +118,7 @@ const TestResultsPage = () => {
             </div>
           ))}
 
-        {results.length === 0 && <p>저장된 테스트 결과가 없습니다.</p>}
+        {testResults.length === 0 && <p>저장된 테스트 결과가 없습니다.</p>}
       </div>
     </div>
   );
