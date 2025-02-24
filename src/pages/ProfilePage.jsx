@@ -35,7 +35,7 @@ const ProfilePage = () => {
 
   const btnHandler = (e) => {
     e.preventDefault();
-    if (!nickName.trim()) {
+    if (!nickName) {
       alert("닉네임을 입력해주세요.");
       return;
     }
