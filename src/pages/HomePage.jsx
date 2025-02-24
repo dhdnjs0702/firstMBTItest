@@ -1,34 +1,16 @@
-import { useEffect } from "react";
 import CompNavBar from "../component/CompNavBar";
 import { useNavigate } from "react-router-dom";
-import { useLoginStatus } from "../zustand/mbtiStore";
 
 const HomePage = () => {
   const navigate = useNavigate();
-
-  const { isLogin, setIsLogin } = useLoginStatus((state) => state);
-
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    setIsLogin(!!token);
-  }, []);
-
-  useEffect(() => {
-    if (isLogin) {
-      navigate("/test");
-    }
-  }, [isLogin, navigate]);
-
-  const jumpToPage = () => {
-    const token = localStorage.getItem("accessToken");
-
+  const token = localStorage.getItem("accessToken");
+  const movePageHandler = () => {
     if (token) {
       navigate("/test");
     } else {
       navigate("/signup");
     }
   };
-
   return (
     <>
       <CompNavBar />
@@ -39,7 +21,7 @@ const HomePage = () => {
         <span>성격 유형 이해</span>
         <span>팀 평가</span>
       </div>
-      <button onClick={jumpToPage}>내 성격 알아보기</button>
+      <button onClick={movePageHandler}>내 성격 알아보기</button>
     </>
   );
 };
