@@ -1,13 +1,13 @@
 import { useState } from "react";
 import CompNavBar from "../component/CompNavBar";
 import { questions } from "../data/questions";
-import { calculateMBTI, mbtiDescriptions } from "../utils/mbtiCalculator";
+import { calculateMBTI } from "../utils/mbtiCalculator";
 import { saveResult } from "../api/auth";
+import { useNavigate } from "react-router-dom";
 
 const TestPage = () => {
   const [selectedOptions, setSelectedOptions] = useState({});
-  const [result, setResult] = useState(null);
-
+  const navigate = useNavigate();
   const handleOptionSelect = (questionId, option) => {
     setSelectedOptions((prevState) => ({
       ...prevState,
@@ -15,7 +15,7 @@ const TestPage = () => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const answers = Object.keys(selectedOptions)
       .map((questionId) => {
         const question = questions.find((q) => q.id === Number(questionId));
@@ -34,11 +34,12 @@ const TestPage = () => {
       .filter(Boolean);
 
     const mbtiResult = calculateMBTI(answers);
-    setResult(mbtiResult);
-    saveResult(mbtiResult);
-
-    console.log("사용자 답변:", answers);
-    console.log("MBTI 결과:", mbtiResult);
+    try {
+      await saveResult(mbtiResult);
+      navigate(`/testresult?mbti=${mbtiResult}`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -70,13 +71,6 @@ const TestPage = () => {
         })}
 
         <button onClick={handleSubmit}>결과 제출하기</button>
-
-        {result && (
-          <>
-            <p>테스트 결과</p>
-            <p> {mbtiDescriptions[result]}</p>
-          </>
-        )}
       </div>
     </>
   );
