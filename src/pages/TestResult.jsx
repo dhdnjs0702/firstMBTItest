@@ -32,17 +32,13 @@ const TestResult = () => {
       <div>
         <h1>테스트 결과</h1>
         <div>
-          <h2>당신의 MBTI는 {mbtiResult}입니다!</h2>
+          <h2>당신의 MBTI는 {mbtiResult}입니다</h2>
           <p>{mbtiDescriptions[mbtiResult]}</p>
         </div>
-        
+
         <div>
-          <button onClick={handleRetakeTest}>
-            테스트 다시하기
-          </button>
-          <button onClick={handleViewAllResults}>
-            전체 결과 보기
-          </button>
+          <button onClick={handleRetakeTest}>테스트 다시하기</button>
+          <button onClick={handleViewAllResults}>전체 결과 보기</button>
         </div>
       </div>
     </>
