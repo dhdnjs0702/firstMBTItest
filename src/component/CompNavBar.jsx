@@ -21,14 +21,13 @@ const CompNavBar = () => {
     }
   };
 
-  console.log("nav", isLogin);
   return (
     <nav>
       <span onClick={() => navigate("/")}>SPARTA MBTI</span>
       {isLogin && (
         <>
           <span onClick={() => navigate("/test")}>테스트하기</span>
-          <span onClick={() => navigate("/testresults")}>다른 테스트 결과</span>
+          <span onClick={() => navigate("/testresults")}>결과 확인</span>
           <span onClick={() => navigate("/profile")}>마이페이지</span>
         </>
       )}
