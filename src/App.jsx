@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   BrowserRouter,
   Navigate,
@@ -16,11 +16,9 @@ import TestResult from "./pages/TestResult";
 
 const App = () => {
   const { isLogin, setIsLogin } = useLoginStatus((state) => state);
-
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    setIsLogin(!!token);
-  }, [setIsLogin]);
+    setIsLogin(isLogin);
+  }, [setIsLogin, isLogin]);
 
   const PublicRoute = () => {
     return <Outlet />;
