@@ -89,7 +89,7 @@ const TestResultsPage = () => {
             <div key={result.id}>
               <div>
                 <h3>
-                  {result.nickname}님의MBTI 결과: {result.mbti}
+                  {result.usernick}님의MBTI 결과: {result.mbti}
                 </h3>
                 <p>{mbtiDescriptions[result.mbti]}</p>
                 <p>
