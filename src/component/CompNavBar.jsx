@@ -10,6 +10,7 @@ const CompNavBar = () => {
     localStorage.removeItem("userInfo");
     localStorage.removeItem("userNick");
     setIsLogin(false);
+    alert("로그아웃 되었습니다.");
     navigate("/");
   };
 
@@ -22,16 +23,36 @@ const CompNavBar = () => {
   };
 
   return (
-    <nav>
+    <nav className="flex justify-between px-8 py-8">
       <span onClick={() => navigate("/")}>SPARTA MBTI</span>
       {isLogin && (
-        <>
-          <span onClick={() => navigate("/test")}>테스트하기</span>
-          <span onClick={() => navigate("/testresults")}>결과 확인</span>
-          <span onClick={() => navigate("/profile")}>마이페이지</span>
-        </>
+        <div className="hidden md:flex justify-around space-x-20">
+          <span
+            className="hover:text-indigo-600 text-gray-700"
+            onClick={() => navigate("/test")}
+          >
+            테스트하기
+          </span>
+          <span
+            className="hover:text-indigo-600 text-gray-700"
+            onClick={() => navigate("/testresults")}
+          >
+            결과 확인
+          </span>
+          <span
+            className="hover:text-indigo-600 text-gray-700"
+            onClick={() => navigate("/profile")}
+          >
+            마이페이지
+          </span>
+        </div>
       )}
-      <span onClick={btnHandler}>{isLogin ? "로그아웃" : "로그인"}</span>
+      <span
+        className="bg-indigo-600 px-4 py-2 rounded text-white hover:bg-indigo-500 text-sm"
+        onClick={btnHandler}
+      >
+        {isLogin ? "로그아웃" : "로그인"}
+      </span>
     </nav>
   );
 };

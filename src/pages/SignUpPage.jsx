@@ -23,8 +23,6 @@ const SignUpPage = () => {
           password: formState.password,
         });
 
-        console.log("Login response =>", data);
-
         alert("로그인이 완료되었습니다.");
 
         localStorage.setItem("accessToken", data.accessToken);
@@ -60,41 +58,56 @@ const SignUpPage = () => {
   return (
     <>
       <CompNavBar />
-      <div>
-        <h1>{isLoginMode ? "로그인" : "회원가입"}</h1>
-        <form onSubmit={onSubmitHandler}>
-          <input
-            name="id"
-            placeholder="아이디 (4~10글자)"
-            minLength={4}
-            maxLength={10}
-            value={id}
-            onChange={onChangeHandler}
-          ></input>
-          <input
-            name="password"
-            placeholder="비밀번호 (4~15글자)"
-            minLength={4}
-            maxLength={15}
-            value={password}
-            onChange={onChangeHandler}
-          ></input>
-          {!isLoginMode && (
+      <div className="h-screen bg-gray-100 flex justify-center">
+        <div className="py-6 px-8 mt-20 bg-white rounded shadow-xl h-[550px] w-[500px]">
+          <h1>{isLoginMode ? "로그인" : "회원가입"}</h1>
+          <hr />
+          <form onSubmit={onSubmitHandler}>
+            <label className="block text-gray-800 font-bold">ID:</label>
             <input
-              name="nickname"
-              placeholder="닉네임 (최대 8자)"
-              minLength={1}
-              maxLength={8}
-              value={nickname}
+              name="id"
+              placeholder="아이디 (4~10글자)"
+              minLength={4}
+              maxLength={10}
+              value={id}
               onChange={onChangeHandler}
+              className="w-full border border-gray-300 py-3 pl-3 rounded mt-2 outline-none focus:ring-indigo-600 :ring-indigo-600"
             ></input>
-          )}
-          <button>{isLoginMode ? "로그인" : "회원가입"}</button>
-          <br />
-          <span onClick={() => setIsLoginMode(!isLoginMode)}>
-            {!isLoginMode ? "로그인으로" : "회원가입으로"}
-          </span>
-        </form>
+            <label className="block text-gray-800 font-bold">PassWord:</label>
+            <input
+              name="password"
+              placeholder="비밀번호 (4~15글자)"
+              minLength={4}
+              maxLength={15}
+              value={password}
+              onChange={onChangeHandler}
+              className="w-full border border-gray-300 py-3 pl-3 rounded mt-2 outline-none focus:ring-indigo-600 :ring-indigo-600"
+            ></input>
+            {!isLoginMode && (
+              <>
+                <label className="block text-gray-800 font-bold">
+                  NickName:
+                </label>
+                <input
+                  name="nickname"
+                  placeholder="닉네임 (최대 8자)"
+                  minLength={1}
+                  maxLength={8}
+                  value={nickname}
+                  onChange={onChangeHandler}
+                  className="w-full border border-gray-300 py-2 pl-3 rounded mt-2 outline-none focus:ring-indigo-600 :ring-indigo-600"
+                ></input>
+              </>
+            )}
+            <button className="cursor-pointer py-2 px-4 block mt-6 bg-indigo-500 text-white font-bold w-full text-center rounded">
+              {isLoginMode ? "로그인" : "회원가입"}
+            </button>
+            <br />
+            <span onClick={() => setIsLoginMode(!isLoginMode)}>
+              {!isLoginMode ? "로그인으로" : "회원가입으로"}
+            </span>
+          </form>
+        </div>
       </div>
     </>
   );
