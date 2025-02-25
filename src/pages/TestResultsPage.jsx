@@ -5,13 +5,13 @@ import {
 } from "../api/auth";
 import CompNavBar from "../component/CompNavBar";
 import { useResults } from "../zustand/mbtiStore";
-import { mbtiDescriptions } from "../utils/mbtiCalculator";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import CompMbtiResultCard from "../component/CompMbtiResultCard";
 
 const TestResultsPage = () => {
   const queryClient = useQueryClient();
   const { results, setResults } = useResults((state) => state);
-  const currentUserId = localStorage.getItem("userInfo");
 
   const {
     data: testResults,
@@ -21,8 +21,6 @@ const TestResultsPage = () => {
     queryKey: ["testResults"],
     queryFn: getTestResults,
   });
-
-  console.log(testResults);
 
   const deleteMutation = useMutation({
     mutationFn: deleteTestResult,
@@ -44,20 +42,19 @@ const TestResultsPage = () => {
   //주석 바로 밑 부분을 참조하시면 됩니다.
   const visibilityMutation = useMutation({
     mutationFn: changeVisibility,
-    onMutate: async (selectedInfo) => {
-      const previousTestResults = queryClient.getQueryData(["testResults"]);
+    // onMutate: async (selectedInfo) => {
+    //   const previousTestResults = queryClient.getQueryData(["testResults"]);
 
-      queryClient.setQueryData(["testResults"], (prev) =>
-        prev.map((result) =>
-          result.id === selectedInfo.id
-            ? { ...result, visibility: !result.visibility }
-            : result
-        )
-      );
+    //   queryClient.setQueryData(["testResults"], (prev) =>
+    //     prev.map((result) =>
+    //       result.id === selectedInfo.id
+    //         ? { ...result, visibility: !result.visibility }
+    //         : result
+    //     )
+    //   );
 
-      // 롤백을 위해 이전 데이터 반환
-      return { previousTestResults };
-    },
+    //   return { previousTestResults };
+    // },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["testResults"] });
     },
@@ -75,9 +72,9 @@ const TestResultsPage = () => {
   }
   return (
     <div>
-      <CompNavBar />
-      <h1>테스트 결과</h1>
       <div>
+        <CompNavBar />
+        <h1>테스트 결과</h1>
         {testResults
           .filter((e) => {
             return (
@@ -85,39 +82,16 @@ const TestResultsPage = () => {
               e.userId === localStorage.getItem("userInfo")
             );
           })
-          .map((result) => (
-            <div key={result.id}>
-              <div>
-                <h3>
-                  {result.usernick}님의MBTI 결과: {result.mbti}
-                </h3>
-                <p>{mbtiDescriptions[result.mbti]}</p>
-                <p>
-                  테스트 날짜: {new Date(result.timestamp).toLocaleDateString()}
-                </p>
-                {currentUserId === result.userId && (
-                  <>
-                    <button
-                      onClick={() => handleDelete(result.id)}
-                      disabled={deleteMutation.isPending}
-                    >
-                      {deleteMutation.isPending ? "삭제 중..." : "삭제"}
-                    </button>{" "}
-                    <span></span>
-                    <button
-                      onClick={() => {
-                        handleVisibility(result);
-                      }}
-                    >
-                      {result.visibility ? "공개" : "비공개"}
-                    </button>
-                  </>
-                )}
-              </div>
-              <hr />
-            </div>
-          ))}
-
+          .map((result) => {
+            return (
+              <CompMbtiResultCard
+                result={result}
+                handleDelete={handleDelete}
+                deleteMutation={deleteMutation}
+                handleVisibility={handleVisibility}
+              />
+            );
+          })}
         {testResults.length === 0 && <p>저장된 테스트 결과가 없습니다.</p>}
       </div>
     </div>
