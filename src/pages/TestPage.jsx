@@ -60,17 +60,23 @@ const TestPage = () => {
                     key={index}
                     onClick={() => handleOptionSelect(e.id, option)}
                   >
-                    {option}
+                    {`${option}`}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   </button>
                 ))}
               </div>
 
               <p>선택된 옵션: {selectedOptions[e.id]}</p>
+              <br />
             </div>
           );
         })}
 
-        <button onClick={handleSubmit}>결과 제출하기</button>
+        <button
+          onClick={handleSubmit}
+          className="bg-indigo-600 px-4 py-2 rounded text-white hover:bg-indigo-500 text-sm"
+        >
+          결과 제출하기
+        </button>
       </div>
     </>
   );
