@@ -1,5 +1,3 @@
-import React from "react";
-
 const CompDescribeCard = ({ main, desc }) => {
   return (
     <div className="size-full bg-white shadow-lg rounded-lg p-5 dark:bg-neutral-900">
